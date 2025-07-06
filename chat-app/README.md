@@ -18,8 +18,8 @@ A real-time terminal-based chat application using Node.js' native `net` module f
 ## Installation
 
 1. Clone the repository:
-   git clone https://github.com/green001-fullstack/node-tcp-chat.git
-   cd node-tcp-chat
+   git clone https://github.com/green001-fullstack/Network-Node-
+   cd networking > cd chat-app
 2. No dependencies needed! (Uses native Node.js modules)
    
 ## Usage
