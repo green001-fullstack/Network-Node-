@@ -31,24 +31,30 @@
 const net = require("net")
 const fs = require("fs/promises")
 
+
 const server = net.createServer(()=>{})
 
 server.on("connection", (serverSoc)=>{
     console.log("New connection")
     
     // Declare fileHandle in a higher scope so it's accessible in both callbacks
-    let fileHandle;
+    let fileHandle, fileWriteStream;
 
     serverSoc.on("data", async (data)=>{
         if (!fileHandle) {
             serverSoc.pause()
-            fileHandle = await fs.open(`storage/test.txt`, "w")
-            const fileWriteStream = fileHandle.createWriteStream();
-            fileWriteStream.write(data)
 
-            serverSoc.resume()
+            const indexOfDivider = data.indexOf("-------")
+            const fileName = data.subarray(10, indexOfDivider).toString("utf-8")
 
-    
+
+            fileHandle = await fs.open(`storage/${fileName}`, "w")
+            fileWriteStream = fileHandle.createWriteStream();
+            if(!fileWriteStream.write(data.subarray(indexOfDivider +7))){
+                serverSoc.pause()
+            }else{
+                serverSoc.resume()
+            }
 
             fileWriteStream.on("drain", ()=>{
                 serverSoc.resume()
